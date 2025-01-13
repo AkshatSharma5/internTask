@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://checkout-ui.shiprocket.com/assets/styles/shopify.css">
+  <title>Shiprocket Checkout</title>
+</head>
+<body>
+  <button id="buyNow">Checkout</button>
+
+  <script src="https://checkout-ui.shiprocket.com/assets/js/channels/shopify.js"></script>
+  <script>
+    const button = document.getElementById('buyNow');
+    button.addEventListener('click', async () => {
+      try {
+        // Fetch the token from your backend
+        const tokenResponse = await fetch('/generate-token');
+        const { token } = await tokenResponse.json();
+
+        // Use the token to trigger the checkout
+        HeadlessCheckout.addToCart(event, token, {
+          fallbackUrl: 'https://your.fallback.com?product=123',
+        });
+      } catch (error) {
+        console.error('Error during checkout:', error);
+      }
+    });
+  </script>
+</body>
+</html>
