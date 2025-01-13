@@ -3,7 +3,7 @@ const axios = require('axios');
 const dotenv = require('dotenv')
 dotenv.config();
 const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjU2NjI1MDcsInNvdXJjZSI6InNyLWF1dGgtaW50IiwiZXhwIjoxNzM3NjM3ODMyLCJqdGkiOiJjakFrcHkwMVhCbDJPSkJwIiwiaWF0IjoxNzM2NzczODMyLCJpc3MiOiJodHRwczovL3NyLWF1dGguc2hpcHJvY2tldC5pbi9hdXRob3JpemUvdXNlciIsIm5iZiI6MTczNjc3MzgzMiwiY2lkIjoxMzI5NjEwLCJ0YyI6MzYwLCJ2ZXJib3NlIjpmYWxzZSwidmVuZG9yX2lkIjowLCJ2ZW5kb3JfY29kZSI6IiJ9.5W-XVV7g8GjZNwKhpxPYJamiqM3uLhnNfqQZHk-ddLQ";
-const apiSecret = process.env.SECRET;
+const apiSecret = "Shekhawati@1";
 const checkoutUrl = 'https://checkout-api.shiprocket.com/api/v1/access-token/checkout';
 
 async function generateAccessToken() {
