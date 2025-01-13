@@ -8,12 +8,13 @@ const { generateAccessToken, getOrderDetails } = require('./shiprocket');
 
 const app = express();
 app.use(cors());
-app.use(express.static(path.join(__dirname, 'public'))); // Serve static files like JS and CSS
+app.use(express.static(path.join(__dirname, 'public'))); 
 
-// Home page route
 app.get('/', (req, res) => {
-  res.send();
+  // Send the HTML file as the response
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
+
 
 // Success redirect route
 app.get('/order-success', (req, res) => {
