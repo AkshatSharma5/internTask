@@ -12,18 +12,20 @@
   <script src="https://checkout-ui.shiprocket.com/assets/js/channels/shopify.js"></script>
   <script>
     const button = document.getElementById('buyNow');
-    button.addEventListener('click', async () => {
-      try {
-        // Fetch the token from your backend
-        const tokenResponse = await fetch('/generate-token');
-        const { token } = await tokenResponse.json();
 
-        // Use the token to trigger the checkout
-        HeadlessCheckout.addToCart(event, token, {
-          fallbackUrl: 'https://your.fallback.com?product=123',
-        });
+    button.addEventListener('click', async (e) => {
+      try {
+        const response = await fetch('/generate-token');
+        const data = await response.json();
+        if (data.token) {
+          HeadlessCheckout.addToCart(e, data.token, {
+            fallbackUrl: 'https://your.fallback.com?product=123',
+          });
+        } else {
+          console.error('Failed to generate token:', data.error);
+        }
       } catch (error) {
-        console.error('Error during checkout:', error);
+        console.error('Error:', error);
       }
     });
   </script>

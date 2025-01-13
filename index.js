@@ -1,43 +1,56 @@
-const crypto = require('crypto');
-const axios = require('axios');
-const dotenv = require('dotenv')
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const path = require('path');
 dotenv.config();
-const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjU2NjI1MDcsInNvdXJjZSI6InNyLWF1dGgtaW50IiwiZXhwIjoxNzM3NjM3ODMyLCJqdGkiOiJjakFrcHkwMVhCbDJPSkJwIiwiaWF0IjoxNzM2NzczODMyLCJpc3MiOiJodHRwczovL3NyLWF1dGguc2hpcHJvY2tldC5pbi9hdXRob3JpemUvdXNlciIsIm5iZiI6MTczNjc3MzgzMiwiY2lkIjoxMzI5NjEwLCJ0YyI6MzYwLCJ2ZXJib3NlIjpmYWxzZSwidmVuZG9yX2lkIjowLCJ2ZW5kb3JfY29kZSI6IiJ9.5W-XVV7g8GjZNwKhpxPYJamiqM3uLhnNfqQZHk-ddLQ";
-const apiSecret = "Shekhawati@1";
-const checkoutUrl = 'https://checkout-api.shiprocket.com/api/v1/access-token/checkout';
 
-async function generateAccessToken() {
-  const timestamp = new Date().toISOString();
-  const hmacData = `${apiKey}:${timestamp}`;
-  const hmac = crypto.createHmac('sha256', apiSecret).update(hmacData).digest('base64');
-  console.log("hmac",hmac)
+const { generateAccessToken, getOrderDetails } = require('./shiprocket');
 
-  const body = {
-    cart_data: {
-      items: [
-        {
-          variant_id: '1244539923890450',
-          quantity: 1,
-        },
-      ],
-    },
-    redirect_url: 'https://your-domain.requestcatcher.com/?anyparam=anyvalue&more=2',
-    timestamp: timestamp,
-  };
+const app = express();
+app.use(cors());
+app.use(express.static(path.join(__dirname, 'public'))); // Serve static files like JS and CSS
+
+// Success redirect route
+app.get('/order-success', (req, res) => {
+  const orderId = req.query.oid;
+  const orderStatus = req.query.ost;
+
+  if (orderStatus === 'SUCCESS') {
+    console.log(`Order ${orderId} placed successfully.`);
+    res.send('Thank you for your order!');
+  } else {
+    console.log(`Order ${orderId} failed with status: ${orderStatus}`);
+    res.send('Order placement failed. Please try again.');
+  }
+});
+
+// API route to fetch order details
+app.get('/fetch-order-details', async (req, res) => {
+  const { orderId } = req.query;
+  if (!orderId) {
+    return res.status(400).send('Missing order ID.');
+  }
 
   try {
-    const response = await axios.post(checkoutUrl, body, {
-      headers: {
-        'X-Api-Key': apiKey,
-        'X-Api-HMAC-SHA256': hmac,
-        'Content-Type': 'application/json',
-      },
-    });
-    console.log('Token Response:', response.data);
-    return response.data.token;
+    const details = await getOrderDetails(orderId);
+    res.json(details);
   } catch (error) {
-    console.error('Error generating token:', error.response ? error.response.data : error.message);
+    res.status(500).json({ error: 'Failed to fetch order details', details: error.message });
   }
-}
+});
 
-generateAccessToken();
+// Route to generate token
+app.get('/generate-token', async (req, res) => {
+  try {
+    const token = await generateAccessToken();
+    res.json({ token });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to generate token', details: error.message });
+  }
+});
+
+// Start server
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}...`);
+});
