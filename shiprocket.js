@@ -59,8 +59,8 @@ async function generateAccessToken() {
         'Content-Type': 'application/json',
       },
     });
-    console.log(response.data.token,": token")
-    return response.data.token;
+    console.log(response.data.result.token,": token")
+    return response.data.result.token;
   } catch (error) {
     console.error('Error generating token:', error.response ? error.response.data : error.message);
     throw error;
