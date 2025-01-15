@@ -8,7 +8,6 @@ const { generateAccessToken, getOrderDetails } = require('./shiprocket');
 
 const app = express();
 app.use(cors());
-app.use(express.static(path.join(__dirname, 'public'))); 
 
 app.get('/', (req, res) => {
   // Send the HTML file as the response
@@ -23,10 +22,11 @@ app.get('/order-success', (req, res) => {
 
   if (orderStatus === 'SUCCESS') {
     console.log(`Order ${orderId} placed successfully.`);
-    res.send('Thank you for your order!');
+    res.sendFile(path.join(__dirname,'success.html'));
   } else {
-    console.log(`Order ${orderId} failed with status: ${orderStatus}`);
-    res.send('Order placement failed. Please try again.');
+    console.log(`Order ${orderId} failed with status: ${orderStatus}`);    
+    res.sendFile(path.join(__dirname,'error.html'));
+
   }
 });
 
@@ -34,14 +34,18 @@ app.get('/order-success', (req, res) => {
 app.get('/fetch-order-details', async (req, res) => {
   const { orderId } = req.query;
   if (!orderId) {
-    return res.status(400).send('Missing order ID.');
+    // return res.status(400).send('Missing order ID.');
+    console.log('Missing order ID.')
+    return res.status(400).sendFile(path.join(__dirname,'error.html'));
   }
 
   try {
     const details = await getOrderDetails(orderId);
     res.json(details);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch order details', details: error.message });
+    // res.status(500).json({ error: 'Failed to fetch order details', details: error.message });
+    console.log({ error: 'Failed to fetch order details', details: error.message })
+    res.status(500).sendFile(path.join(__dirname,'error.html'));
   }
 });
 
@@ -51,7 +55,9 @@ app.get('/generate-token', async (req, res) => {
     const token = await generateAccessToken();
     res.json({ token });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to generate token', details: error.message });
+    // res.status(500).json({ error: 'Failed to generate token', details: error.message });
+    console.log({ error: 'Failed to generate token', details: error.message });
+    return res.status(500).sendFile(path.join(__dirname,'error.html'));
   }
 });
 
