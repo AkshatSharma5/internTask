@@ -9,22 +9,14 @@ const sellerId = process.env.SELLER_ID;
 const checkoutUrl = 'https://checkout-api.shiprocket.com/api/v1/access-token/checkout';
 const orderDetailsUrl = 'https://checkout-api.shiprocket.com/api/v1/custom-platform-order/details';
 
-// Function to calculate HMAC SHA-256 in base64 format
 const calculateHmacSha256AsBase64 = (key, content) => {
-  // Calculate the HMAC using SHA-256 with the key and content
   const hmac = CryptoJS.HmacSHA256(content, key).toString(CryptoJS.enc.Hex);
-
-  // Convert the Hex formatted HMAC to Base64
-  const calculatedHmacBase64 = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Hex.parse(hmac));
-
+  const calculatedHmacBase64 = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Hex.parse(hmac))
   return calculatedHmacBase64;
 };
 
-// Generate access token
 async function generateAccessToken() {
   const timestamp = new Date().toISOString();
-  
-  // Generate HMAC using the request body and secret key
   const hmac = calculateHmacSha256AsBase64(apiSecret, JSON.stringify({
     cart_data: {
       items: [
@@ -34,7 +26,7 @@ async function generateAccessToken() {
         },
       ],
     },
-    redirect_url: 'https://your-redirect-url.com',
+    redirect_url: '/success.html',
     timestamp: timestamp,
   }));
 
@@ -47,7 +39,7 @@ async function generateAccessToken() {
         },
       ],
     },
-    redirect_url: 'https://your-redirect-url.com',
+    redirect_url: '/success.html',
     timestamp: timestamp,
   };
 
@@ -67,11 +59,8 @@ async function generateAccessToken() {
   }
 }
 
-// Fetch order details
 async function getOrderDetails(orderId) {
   const timestamp = new Date().toISOString();
-  
-  // Generate HMAC using the request body and secret key
   const hmac = calculateHmacSha256AsBase64(apiSecret, JSON.stringify({
     order_id: orderId,
     timestamp: timestamp,
@@ -90,9 +79,10 @@ async function getOrderDetails(orderId) {
         'Content-Type': 'application/json',
       },
     });
+    console.log(response);
     return response.data;
   } catch (error) {
-    console.error('Error fetching order details:', error.response ? error.response.data : error.message);
+    console.error('Error fetching order details:', error.response.data);
     throw error;
   }
 }

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Success</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: white;
+        color: #333;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+      }
+      .icon {
+        font-size: 5rem;
+      }
+      .message {
+        font-size: 2rem;
+        margin: 20px 0;
+      }
+      img {
+        height: 45%;
+        width: 30%;
+      }
+      .input {
+        padding: 10px;
+        font-size: 1rem;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+      .input:focus {
+        border-color: #007bff;
+      }
+      a {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 1rem;
+        color: #fff;
+        background-color: #007bff;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+      }
+      a:hover {
+        background-color: #0056b3;
+      }
+      .flex {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-top: 20px;
+      }
+      h3{
+        background-color: green;
+        color: white;        
+        border-radius: 5px;
+        padding: 10px 16px;
+      }
+      h3:hover{
+        background-color: rgb(118, 179, 28);
+        transition: all;
+      }
+    </style>
+    <script>
+      function updateLink() {
+        const input = document.querySelector('.input');
+        const link = document.querySelector('.dynamic-link');
+        const orderId = input.value.trim(); // handle leading whitespaces in text
+        link.href = `/fetch-order-details?orderId=${encodeURIComponent(orderId)}`; // handle special chars etc.
+      }
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <img class="icon" src="https://i.gifer.com/7efs.gif" alt="Success" />
+      <h1 class="message">Token Generated Successfully!</h1>
+      <h3>Order Details</h3>
+      <div class="flex">
+        <input
+          type="text"
+          class="input"
+          name="Order ID"
+          placeholder="Enter Order Id"
+          oninput="updateLink()"
+        />
+        <a href="/fetch-order-details" class="dynamic-link">Get Order Details</a>
+      </div>
+    </div>
+  </body>
+</html>

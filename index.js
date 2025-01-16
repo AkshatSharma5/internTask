@@ -26,9 +26,17 @@ app.get('/order-success', (req, res) => {
   } else {
     console.log(`Order ${orderId} failed with status: ${orderStatus}`);    
     res.sendFile(path.join(__dirname,'error.html'));
-
   }
 });
+
+
+
+
+
+
+
+
+
 
 // API route to fetch order details
 app.get('/fetch-order-details', async (req, res) => {
@@ -41,19 +49,30 @@ app.get('/fetch-order-details', async (req, res) => {
 
   try {
     const details = await getOrderDetails(orderId);
+    console.log(details.data)
     res.json(details);
   } catch (error) {
     // res.status(500).json({ error: 'Failed to fetch order details', details: error.message });
-    console.log({ error: 'Failed to fetch order details', details: error.message })
+    console.log({ error: 'Failed to fetch order details', details: error.details })
     res.status(500).sendFile(path.join(__dirname,'error.html'));
   }
 });
+
+
+
+
+
+
+
+
+
+
 
 // Route to generate token
 app.get('/generate-token', async (req, res) => {
   try {
     const token = await generateAccessToken();
-    res.json({ token });
+    res.status(200).sendFile(path.join(__dirname,"./tokenPage.html"));
   } catch (error) {
     // res.status(500).json({ error: 'Failed to generate token', details: error.message });
     console.log({ error: 'Failed to generate token', details: error.message });
