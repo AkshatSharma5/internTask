@@ -7,7 +7,7 @@ const apiSecret = process.env.API_SECRET;
 const sellerId = process.env.SELLER_ID;
 
 const checkoutUrl = 'https://checkout-api.shiprocket.com/api/v1/access-token/checkout';
-const orderDetailsUrl = 'https://checkout-api.shiprocket.com/api/v1/custom-platform-order/details';
+const orderDetailsUrl = 'https://apiv2.shiprocket.in/v1/external/orders/create/adhoc?order_id=224447';
 
 const calculateHmacSha256AsBase64 = (key, content) => {
   const hmac = CryptoJS.HmacSHA256(content, key).toString(CryptoJS.enc.Hex);

@@ -60,23 +60,25 @@
         align-items: center;
         margin-top: 20px;
       }
-      h3{
+      h3 {
         background-color: green;
-        color: white;        
+        color: white;
         border-radius: 5px;
         padding: 10px 16px;
       }
-      h3:hover{
+      h3:hover {
         background-color: rgb(118, 179, 28);
         transition: all;
       }
     </style>
     <script>
       function updateLink() {
-        const input = document.querySelector('.input');
-        const link = document.querySelector('.dynamic-link');
+        const input = document.querySelector(".input");
+        const link = document.querySelector(".dynamic-link");
         const orderId = input.value.trim(); // handle leading whitespaces in text
-        link.href = `/fetch-order-details?orderId=${encodeURIComponent(orderId)}`; // handle special chars etc.
+        link.href = `/fetch-order-details?orderId=${encodeURIComponent(
+          orderId
+        )}`; // handle special chars etc.
       }
     </script>
   </head>
@@ -93,7 +95,29 @@
           placeholder="Enter Order Id"
           oninput="updateLink()"
         />
-        <a href="/fetch-order-details" class="dynamic-link">Get Order Details</a>
+        <!-- <a href="/fetch-order-details" class="dynamic-link">Get Order Details</a> -->
+        <a
+          href="/cart.html"
+          class="dynamic-link"
+          onclick="navigateToCart(event)"
+        >
+        Get Order Details
+        </a>
+
+        <script>
+          function navigateToCart(event) {
+            event.preventDefault();
+            
+            const orderId = document.querySelector(".input").value.trim();
+
+            if (orderId) {
+              // Redirect to the cart page with the Order ID as a query parameter
+              window.location.href = `/cart.html?orderId=${encodeURIComponent(orderId)}`;
+            } else {
+              alert("Please enter a valid Order ID.");
+            }
+          }
+        </script>
       </div>
     </div>
   </body>

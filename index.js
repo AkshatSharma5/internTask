@@ -33,11 +33,6 @@ app.get('/order-success', (req, res) => {
 
 
 
-
-
-
-
-
 // API route to fetch order details
 app.get('/fetch-order-details', async (req, res) => {
   const { orderId } = req.query;
@@ -61,13 +56,6 @@ app.get('/fetch-order-details', async (req, res) => {
 
 
 
-
-
-
-
-
-
-
 // Route to generate token
 app.get('/generate-token', async (req, res) => {
   try {
@@ -79,6 +67,26 @@ app.get('/generate-token', async (req, res) => {
     return res.status(500).sendFile(path.join(__dirname,'error.html'));
   }
 });
+
+
+
+
+app.get('/cart.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'cart.html'));
+});
+
+app.get('/success', (req, res) => {
+  res.sendFile(path.join(__dirname, 'success.html'));
+});
+
+app.get('/error', (req, res) => {
+  res.sendFile(path.join(__dirname, 'error.html'));
+});
+
+app.get('/my-order-details', (req, res) => {
+  res.sendFile(path.join(__dirname, 'orderDetails.html'));
+});
+
 
 // Start server
 const PORT = 3000;

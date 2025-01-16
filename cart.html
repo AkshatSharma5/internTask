@@ -1,51 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cart</title>
-  <link rel="stylesheet" href="https://checkout-ui.shiprocket.com/assets/styles/shopify.css">
+  <link
+    rel="stylesheet"
+    href="https://checkout-ui.shiprocket.com/assets/styles/shopify.css"
+  />
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
+      background: linear-gradient(to right, #6f1bca, #1ab1bf);
       text-align: center;
       padding: 20px;
+      color: #fff;
+    }
+    .cart-container {
+      background: #00000035;
+      padding: 10px 0px;
     }
     .button {
       padding: 10px 20px;
       font-size: 1rem;
       color: #fff;
-      background-color: #007bff;
+      background: linear-gradient(to right, #b914ae, #aebe1a);
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      font-weight: 700;
     }
     .button:hover {
-      background-color: #0056b3;
+      background-color: #0e8528;
+    }
+    .cart-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    img {
+      width: 55px;
+      height: 55px;
+      margin-right: 20px;
     }
   </style>
   <script src="https://checkout-ui.shiprocket.com/assets/js/channels/shopify.js"></script>
 </head>
 <body>
-  <h1>Cart</h1>
-  <p>Your order details are being processed...</p>
-  <button id="checkout" class="button">Checkout</button>
+  <div>
+    <div class="cart-container">
+      <img
+        src="https://icons.veryicon.com/png/o/miscellaneous/flower-mall-color-icon/shopping-cart-114.png"
+        alt="Cart Icon"
+      />
+      <h1>MY CART</h1>
+    </div>
+    <!-- <button id="checkout" class="button">CHECKOUT</button> -->
+    <a href="/my-order-details">
+      <button class="button">TEST CHECKOUT</button>
+    </a>
+  </div>
 
   <script>
-    document.getElementById('checkout').addEventListener('click', async () => {
-      const tokenResponse = await fetch('/generate-token'); // Fetch token from backend
-      const { token } = await tokenResponse.json();
 
-      if (token) {
-        HeadlessCheckout.addToCart(event, token, {
-          fallbackUrl: "https://shiprocket.com",
-        });
-      } else {
-        alert("Failed to generate token. Please try again.");
-      }
-    });
+
+    document
+      .getElementById("checkout")
+      .addEventListener("click", async (event) => {
+        try {
+          // Fetch the token from the server
+          const response = await fetch("/generate-token");
+
+          // Access the token
+          const token = response.data.result.token;
+
+          if (token) {
+            // Trigger the checkout process with the token
+            HeadlessCheckout.addToCart(event, token, {
+              fallbackUrl: "http://localhost:3000/my-order-details",
+            });
+          } else {
+            alert("Failed to generate token. Please try again.");
+          }
+        } catch (error) {
+          console.error("Error during checkout:", error);
+          window.location.href = "http://localhost:3000/error";
+          alert("The order ID does not exist. Please try again.");
+        }
+      });
   </script>
 </body>
 </html>
